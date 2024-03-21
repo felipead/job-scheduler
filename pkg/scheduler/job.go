@@ -2,8 +2,9 @@ package scheduler
 
 import "fmt"
 
-// TriggerCallback receives the job name, the hour and minute the job was triggered
-type TriggerCallback = func(string, int, int)
+// TriggerCallback receives the job name, the absolute time (minutes), the hour and the minute of the hour - all
+// relative to the time the job was triggered.
+type TriggerCallback = func(string, int, int, int)
 
 type Job interface {
 	Trigger(hour int, minute int)
@@ -15,10 +16,10 @@ type HourlyJob struct {
 	OnTrigger TriggerCallback
 }
 
-func (job *HourlyJob) Trigger(hour int, minute int) {
+func (job *HourlyJob) Trigger(time int, hour int, minute int) {
 	fmt.Printf("[%02d:%02d] %v triggered (hourly)\n", hour, minute, job.Name)
 	if job.OnTrigger != nil {
-		job.OnTrigger(job.Name, hour, minute)
+		job.OnTrigger(job.Name, time, hour, minute)
 	}
 }
 
@@ -31,9 +32,9 @@ type IntervalJob struct {
 	NextHour        int
 }
 
-func (job *IntervalJob) Trigger(hour int, minute int) {
+func (job *IntervalJob) Trigger(time int, hour int, minute int) {
 	fmt.Printf("[%02d:%02d] %v triggered (%v mins interval)\n", hour, minute, job.Name, job.IntervalMinutes)
 	if job.OnTrigger != nil {
-		job.OnTrigger(job.Name, hour, minute)
+		job.OnTrigger(job.Name, time, hour, minute)
 	}
 }
