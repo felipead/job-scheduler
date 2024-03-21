@@ -3,7 +3,6 @@ package scheduler
 const _24Hours = 1440
 
 func JobLoop(schedule *Schedule) {
-
 	//
 	// If performance was not a concern, we could simply maintain a simple list or array containing all jobs.
 	// For every minute, we would go over that list and find those that matches that exact minute (and hour)
@@ -65,7 +64,6 @@ func JobLoop(schedule *Schedule) {
 		hour := time / 60
 		minute := time % 60
 
-		runHourlySchedule(schedule, time, hour, minute)
 		runIntervalSchedule(schedule, time, hour, minute)
 
 		time++
@@ -77,31 +75,19 @@ func JobLoop(schedule *Schedule) {
 	}
 }
 
-func runHourlySchedule(schedule *Schedule, time int, hour int, minute int) {
-	jobs := schedule.GetHourlyJobsAt(minute)
-
-	if jobs == nil || len(jobs) == 0 {
-		return
-	}
-
-	for _, job := range jobs {
-		job.Trigger(time, hour, minute)
-	}
-}
-
 func runIntervalSchedule(schedule *Schedule, time int, hour int, minute int) {
-	jobs := schedule.GetIntervalJobsAt(minute)
+	jobs := schedule.GetScheduledJobsAt(minute)
 
 	if jobs == nil || jobs.Len() == 0 {
 		return
 	}
 
-	triggeredJobs := make([]IntervalJob, 0, jobs.Len())
+	triggeredJobs := make([]Job, 0, jobs.Len())
 
 	// iterates over the Linked List, triggering jobs and removing them from the list if they were triggered
 	pointer := jobs.Front()
 	for pointer != nil {
-		job := pointer.Value.(IntervalJob)
+		job := pointer.Value.(Job)
 		nextPointer := pointer.Next()
 
 		// We are indexing jobs by the minute of hour, but we only want to trigger this job
