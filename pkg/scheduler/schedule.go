@@ -47,7 +47,7 @@ func (s *Schedule) addJob(name string, intervalMinutes int, nextHour int, nextMi
 	})
 }
 
-func (s *Schedule) RescheduleIntervalJob(job Job) {
+func (s *Schedule) Reschedule(job Job) {
 	jobs := s.buckets[job.NextMinute]
 	if jobs == nil {
 		jobs = list.New()
@@ -56,6 +56,6 @@ func (s *Schedule) RescheduleIntervalJob(job Job) {
 	jobs.PushBack(job)
 }
 
-func (s *Schedule) GetScheduledJobsAt(minute int) *list.List {
+func (s *Schedule) GetJobsAt(minute int) *list.List {
 	return s.buckets[minute]
 }
