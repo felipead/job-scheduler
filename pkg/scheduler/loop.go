@@ -27,8 +27,8 @@ func JobLoop() {
 	//       J ← intervalSchedule[minute]
 	//       for job in J:
 	//       	job.Trigger()
-	//          nextMinute ← (time + job.Interval) mod 60
 	//          remove job from J
+	//          nextMinute ← (time + job.Interval) mod 60
 	//          reschedule job for nextMinute
 	//
 	// That solves the problem for hourly jobs (i.e.: every 17 minutes of the hour) and interval jobs with short
@@ -37,17 +37,27 @@ func JobLoop() {
 	//
 	// We can still keep the jobs sorted by the minute of the hour they are supposed to be triggered. However, before
 	// triggering a job, we will check if the hour it is supposed to be triggered also matches the current hour.
-	// We only want to trigger jobs if both the hour and the minute match the schedule.
+	// We only want to trigger jobs if both the hour and the minute match the schedule. The algorithm would then
+	// slightly change to:
 	//
-	// The technique used here is called "indexing", where we index each job by the minute of the hour it is supposed
-	// to be run. That makes determining if a given job is supposed to be run in a given hour and minute on average:
+	//       J ← intervalSchedule[minute]
+	//       for job in J:
+	//       	job.Trigger()
+	//          remove job from J
+	//          nextMinute ← (time + job.Interval) mod 60
+	//          reschedule job for nextMinute
+	//
+	// The technique used here is called "indexing" or "bucket sort", where we index each job by the minute of the
+	// hour it is supposed to be run (0-59). That makes determining if a given job is supposed to be run in a given
+	// hour and minute on average:
 	//
 	//    O(N ÷ 60)
 	//
-	// where N is the total number of jobs (assuming a uniform distribution).
+	// where N is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that
+	// can be close to O(1).
 	//
-	// If indexing by minute is not appropriate, we could index by any other unit of time, like hour, day or even
-	// second.
+	// If indexing by minute is not appropriate for the problem at hand, we could index by any other unit of time,
+	// like hour, day or even second.
 	//
 
 	time := 0
