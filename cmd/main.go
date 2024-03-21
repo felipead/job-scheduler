@@ -9,9 +9,12 @@ func main() {
 	// Job 4 is executed every 25th minute (HH:25, HH:50, HH:15, HH:40)
 	// Job 5 is executed every 100th minute (HH:25, HH:50, HH:15, HH:40)
 
-	scheduler.ScheduleHourlyJob("Job 1", 17, nil)
-	scheduler.ScheduleIntervalJob("Job 2", 4, 0, nil)
-	scheduler.ScheduleIntervalJob("Job 3", 6, 1, nil)
-	scheduler.ScheduleIntervalJob("Job 4", 25, 0, nil)
-	scheduler.JobLoop()
+	schedule := scheduler.NewSchedule()
+
+	schedule.AddHourlyJob("Job 1", 17, nil)
+	schedule.AddIntervalJob("Job 2", 4, 0, nil)
+	schedule.AddIntervalJob("Job 3", 6, 1, nil)
+	schedule.AddIntervalJob("Job 4", 25, 0, nil)
+
+	scheduler.JobLoop(schedule)
 }

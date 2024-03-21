@@ -2,7 +2,7 @@ package scheduler
 
 const _24Hours = 1440
 
-func JobLoop() {
+func JobLoop(schedule *Schedule) {
 
 	//
 	// If performance was not a concern, we could simply maintain a simple list or array containing all jobs.
@@ -65,8 +65,8 @@ func JobLoop() {
 		hour := time / 60
 		minute := time % 60
 
-		runHourlySchedule(time, hour, minute)
-		runIntervalSchedule(time, hour, minute)
+		runHourlySchedule(schedule, time, hour, minute)
+		runIntervalSchedule(schedule, time, hour, minute)
 
 		time++
 
@@ -77,42 +77,51 @@ func JobLoop() {
 	}
 }
 
-func runHourlySchedule(time int, hour int, minute int) {
-	if jobs := getHourlyScheduleAt(minute); jobs != nil && len(jobs) > 0 {
-		for _, job := range jobs {
-			job.Trigger(time, hour, minute)
-		}
+func runHourlySchedule(schedule *Schedule, time int, hour int, minute int) {
+	jobs := schedule.GetHourlyJobsAt(minute)
+
+	if jobs == nil || len(jobs) == 0 {
+		return
+	}
+
+	for _, job := range jobs {
+		job.Trigger(time, hour, minute)
 	}
 }
 
-func runIntervalSchedule(time int, hour int, minute int) {
-	if jobs := getIntervalScheduleAt(minute); jobs != nil && jobs.Len() > 0 {
-		triggeredJobs := make([]IntervalJob, 0, jobs.Len())
+func runIntervalSchedule(schedule *Schedule, time int, hour int, minute int) {
+	jobs := schedule.GetIntervalJobsAt(minute)
 
-		// iterates over the Linked List, triggering jobs and removing them from the list if they were triggered
-		pointer := jobs.Front()
-		for pointer != nil {
-			job := pointer.Value.(IntervalJob)
-			nextPointer := pointer.Next()
+	if jobs == nil || jobs.Len() == 0 {
+		return
+	}
 
-			// We are indexing jobs by the minute of hour, but we only want to trigger this job
-			// if the hour also matches. This is important because we might have intervals that
-			// are longer than 60 minutes. For example, repeats every 100 minutes, which will span
-			// across 2 hours.
-			if job.NextHour == hour {
-				job.Trigger(time, hour, minute)
-				triggeredJobs = append(triggeredJobs, job)
-				jobs.Remove(pointer)
-			}
+	triggeredJobs := make([]IntervalJob, 0, jobs.Len())
 
-			pointer = nextPointer
+	// iterates over the Linked List, triggering jobs and removing them from the list if they were triggered
+	pointer := jobs.Front()
+	for pointer != nil {
+		job := pointer.Value.(IntervalJob)
+		nextPointer := pointer.Next()
+
+		// We are indexing jobs by the minute of hour, but we only want to trigger this job
+		// if the hour also matches. This is important because we might have intervals that
+		// are longer than 60 minutes. For example, repeats every 100 minutes, which will span
+		// across 2 hours.
+		if job.NextHour == hour {
+			job.Trigger(time, hour, minute)
+			triggeredJobs = append(triggeredJobs, job)
+			jobs.Remove(pointer)
 		}
 
-		for _, job := range triggeredJobs {
-			nextTime := time + job.IntervalMinutes
-			job.NextMinute = nextTime % 60
-			job.NextHour = nextTime / 60
-			rescheduleIntervalJob(job)
-		}
+		pointer = nextPointer
+	}
+
+	// reschedule the jobs that have been triggered for the next interval
+	for _, job := range triggeredJobs {
+		nextTime := time + job.IntervalMinutes
+		job.NextMinute = nextTime % 60
+		job.NextHour = nextTime / 60
+		schedule.RescheduleIntervalJob(job)
 	}
 }
