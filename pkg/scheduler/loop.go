@@ -1,8 +1,57 @@
 package scheduler
 
+const _24Hours = 1440
+
 func JobLoop() {
+
+	//
+	// If performance was not a concern, we could simply maintain a simple list or array containing all jobs.
+	// For every minute, we would go over that list and find those that matches that exact minute (and hour)
+	// However, this can be very slow if we have many jobs and are running on the scale of seconds or milliseconds.
+	// Instead, I am going to sort jobs into buckets. The idea is that buckets are sorted by a meaningful time unit.
+	// Since our smallest unit is minutes, I will keep the jobs sorted by 60 buckets, each of them corresponding to
+	// a minute of the hour.
+	//
+	// The algorithm works as follows:
+	//
+	//   let hourlySchedule: a hash table where the minute of the hour (0-59) maps to an array of jobs (hourly)
+	//   let intervalSchedule: a hash table where the minute of the hour (0-59) maps to a linked-list of jobs (interval)
+	//
+	//   for any given time:
+	//       hour ← time div 60
+	//       minute ← time mod 60
+	//
+	//       for job in hourlySchedule[minute]:
+	//           job.Trigger()
+	//
+	//       J ← intervalSchedule[minute]
+	//       for job in J:
+	//       	job.Trigger()
+	//          nextMinute ← (time + job.Interval) mod 60
+	//          remove job from J
+	//          reschedule job for nextMinute
+	//
+	// That solves the problem for hourly jobs (i.e.: every 17 minutes of the hour) and interval jobs with short
+	// intervals (eg: every 25th minute). However, if the interval spans for more than 60 minutes,
+	// (i.e: repeat every 100 minutes) that interval wouldn't be respected.
+	//
+	// We can still keep the jobs sorted by the minute of the hour they are supposed to be triggered. However, before
+	// triggering a job, we will check if the hour it is supposed to be triggered also matches the current hour.
+	// We only want to trigger jobs if both the hour and the minute match the schedule.
+	//
+	// The technique used here is called "indexing", where we index each job by the minute of the hour it is supposed
+	// to be run. That makes determining if a given job is supposed to be run in a given hour and minute on average:
+	//
+	//    O(N ÷ 60)
+	//
+	// where N is the total number of jobs (assuming a uniform distribution).
+	//
+	// If indexing by minute is not appropriate, we could index by any other unit of time, like hour, day or even
+	// second.
+	//
+
 	time := 0
-	for time < 1440 {
+	for time < _24Hours {
 		minute := time % 60
 		hour := time / 60
 
