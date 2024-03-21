@@ -102,7 +102,7 @@ func runIntervalSchedule(time int, hour int, minute int) {
 			nextTime := time + job.IntervalMinutes
 			job.NextMinute = nextTime % 60
 			job.NextHour = nextTime / 60
-			reschedule(job)
+			rescheduleIntervalJob(job)
 		}
 	}
 }

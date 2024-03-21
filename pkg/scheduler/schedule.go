@@ -20,8 +20,8 @@ func ScheduleHourlyJob(name string, minute int, onTrigger TriggerCallback) {
 	})
 }
 
-func ScheduleIntervalJob(name string, intervalMinutes int, offsetMinutes int, onTrigger TriggerCallback) {
-	nextTime := intervalMinutes + offsetMinutes
+func ScheduleIntervalJob(name string, intervalMinutes int, offset int, onTrigger TriggerCallback) {
+	nextTime := offset + intervalMinutes
 	nextMinute := nextTime % 60
 	nextHour := nextTime / 60
 
@@ -40,7 +40,7 @@ func ScheduleIntervalJob(name string, intervalMinutes int, offsetMinutes int, on
 	})
 }
 
-func reschedule(job IntervalJob) {
+func rescheduleIntervalJob(job IntervalJob) {
 	jobs := intervalSchedule[job.NextMinute]
 	if jobs == nil {
 		jobs = list.New()
