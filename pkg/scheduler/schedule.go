@@ -5,7 +5,7 @@ import "container/list"
 var hourlySchedule = make(map[int][]HourlyJob)
 var intervalSchedule = make(map[int]*list.List)
 
-func ScheduleHourlyJob(jobName string, minute int) {
+func ScheduleHourlyJob(name string, minute int, onTrigger TriggerCallback) {
 	// TODO: in a production system, I would instead add validation before accepting this job: 0 <= minute < 60
 	minute = minute % 60
 
@@ -15,11 +15,12 @@ func ScheduleHourlyJob(jobName string, minute int) {
 	}
 
 	hourlySchedule[minute] = append(jobs, HourlyJob{
-		Name: jobName,
+		Name:      name,
+		OnTrigger: onTrigger,
 	})
 }
 
-func ScheduleIntervalJob(jobName string, intervalMinutes int, offsetMinutes int) {
+func ScheduleIntervalJob(name string, intervalMinutes int, offsetMinutes int, onTrigger TriggerCallback) {
 	nextTime := intervalMinutes + offsetMinutes
 	nextMinute := nextTime % 60
 	nextHour := nextTime / 60
@@ -31,7 +32,8 @@ func ScheduleIntervalJob(jobName string, intervalMinutes int, offsetMinutes int)
 	}
 
 	jobs.PushBack(IntervalJob{
-		Name:            jobName,
+		Name:            name,
+		OnTrigger:       onTrigger,
 		IntervalMinutes: intervalMinutes,
 		NextMinute:      nextMinute,
 		NextHour:        nextHour,
