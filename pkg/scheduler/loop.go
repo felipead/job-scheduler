@@ -13,17 +13,13 @@ func JobLoop(schedule *Schedule) {
 	//
 	// The algorithm works as follows:
 	//
-	//   let hourlySchedule: a hash table where the minute of the hour (0-59) maps to an array of jobs (hourly)
-	//   let intervalSchedule: a hash table where the minute of the hour (0-59) maps to a linked-list of jobs (interval)
+	//   let schedule: a hash table where the minute of the hour (0-59) maps to a linked-list of jobs
 	//
 	//   for any given time:
 	//       hour ← time div 60
 	//       minute ← time mod 60
 	//
-	//       for job in hourlySchedule[minute]:
-	//           job.Trigger()
-	//
-	//       J ← intervalSchedule[minute]
+	//       J ← schedule[minute]
 	//       for job in J:
 	//       	job.Trigger()
 	//          remove job from J
@@ -39,7 +35,7 @@ func JobLoop(schedule *Schedule) {
 	// We only want to trigger jobs if both the hour and the minute match the schedule. The algorithm would then
 	// slightly change to:
 	//
-	//       J ← intervalSchedule[minute]
+	//       J ← schedule[minute]
 	//       for job in J:
 	//       	job.Trigger()
 	//          remove job from J
