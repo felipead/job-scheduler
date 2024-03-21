@@ -13,7 +13,7 @@ func JobLoop(schedule *Schedule) {
 	//
 	// The algorithm works as follows:
 	//
-	//   let schedule: a hash table where the minute of the hour (0-59) maps to a linked-list of jobs
+	//   let schedule: a hash table where the minute of the hour (0-59) maps to a linked-list of jobs J
 	//
 	//   for any given time:
 	//       hour ← time div 60
@@ -21,10 +21,10 @@ func JobLoop(schedule *Schedule) {
 	//
 	//       J ← schedule[minute]
 	//       for job in J:
-	//       	job.Trigger()
-	//          remove job from J
-	//          nextMinute ← (time + job.Interval) mod 60
-	//          reschedule job for nextMinute
+	//           job.Trigger()
+	//           remove job from J
+	//           nextMinute ← (time + job.Interval) mod 60
+	//           reschedule job for nextMinute
 	//
 	// That solves the problem for hourly jobs (i.e.: every 17 minutes of the hour) and interval jobs with short
 	// intervals (eg: every 25th minute). However, if the interval spans for more than 60 minutes,
@@ -37,10 +37,13 @@ func JobLoop(schedule *Schedule) {
 	//
 	//       J ← schedule[minute]
 	//       for job in J:
-	//       	job.Trigger()
-	//          remove job from J
-	//          nextMinute ← (time + job.Interval) mod 60
-	//          reschedule job for nextMinute
+	//           if job.NextHour = hour:
+	//       	     job.Trigger()
+	//               remove job from J
+	//               t ← (time + job.Interval)
+	//               nextMinute ← t mod 60
+	//               nextHour ← t div 60
+	//               reschedule job for nextMinute and nextHour
 	//
 	// The technique used here is called "indexing" or "bucket sort", where we index each job by the minute of the
 	// hour it is supposed to be run (0-59). That makes determining if a given job is supposed to be run in a given
