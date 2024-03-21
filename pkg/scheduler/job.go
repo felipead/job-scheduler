@@ -23,15 +23,13 @@ func (job *Job) Trigger(time int, hour int, minute int) {
 }
 
 func (job *Job) logTrigger(hour int, minute int) {
-	var intervalText string
+	intervalText := "hour"
 	if interval := job.IntervalMinutes; interval != 60 {
 		word := "minutes"
 		if interval == 1 {
 			word = "minute"
 		}
 		intervalText = fmt.Sprintf("%d %s", interval, word)
-	} else {
-		intervalText = "hour"
 	}
 
 	fmt.Printf("[%02d:%02d] %v triggered → {every %s}\n", hour, minute, job.Name, intervalText)
