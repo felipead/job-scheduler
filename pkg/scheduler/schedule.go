@@ -3,12 +3,12 @@ package scheduler
 import "container/list"
 
 type Schedule struct {
-	interval map[int]*list.List
+	buckets map[int]*list.List
 }
 
 func NewSchedule() *Schedule {
 	return &Schedule{
-		interval: make(map[int]*list.List),
+		buckets: make(map[int]*list.List),
 	}
 }
 
@@ -32,10 +32,10 @@ func (s *Schedule) AddIntervalJob(name string, intervalMinutes int, offset int, 
 }
 
 func (s *Schedule) addJob(name string, intervalMinutes int, nextHour int, nextMinute int, onTrigger TriggerCallback) {
-	jobs := s.interval[nextMinute]
+	jobs := s.buckets[nextMinute]
 	if jobs == nil {
 		jobs = list.New()
-		s.interval[nextMinute] = jobs
+		s.buckets[nextMinute] = jobs
 	}
 
 	jobs.PushBack(Job{
@@ -48,14 +48,14 @@ func (s *Schedule) addJob(name string, intervalMinutes int, nextHour int, nextMi
 }
 
 func (s *Schedule) RescheduleIntervalJob(job Job) {
-	jobs := s.interval[job.NextMinute]
+	jobs := s.buckets[job.NextMinute]
 	if jobs == nil {
 		jobs = list.New()
-		s.interval[job.NextMinute] = jobs
+		s.buckets[job.NextMinute] = jobs
 	}
 	jobs.PushBack(job)
 }
 
 func (s *Schedule) GetScheduledJobsAt(minute int) *list.List {
-	return s.interval[minute]
+	return s.buckets[minute]
 }
