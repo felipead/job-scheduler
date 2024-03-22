@@ -4,7 +4,7 @@ import "fmt"
 
 // TriggerCallback receives the job name, the absolute time (minutes), the hour and the minute of the hour - all
 // relative to the time the job was triggered.
-type TriggerCallback = func(string, int)
+type TriggerCallback = func(string, Time)
 
 type Job struct {
 	Name            string
@@ -14,7 +14,7 @@ type Job struct {
 	NextHour        int
 }
 
-func (job *Job) Trigger(time int) {
+func (job *Job) Trigger(time Time) {
 	job.logTrigger(time)
 
 	if job.OnTrigger != nil {
@@ -22,9 +22,9 @@ func (job *Job) Trigger(time int) {
 	}
 }
 
-func (job *Job) logTrigger(time int) {
-	hour := time / 60
-	minute := time % 60
+func (job *Job) logTrigger(time Time) {
+	hour := time.GetHour()
+	minute := time.GetMinute()
 
 	intervalText := "hour"
 	if interval := job.IntervalMinutes; interval != 60 {

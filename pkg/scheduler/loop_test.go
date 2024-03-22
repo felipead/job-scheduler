@@ -8,16 +8,16 @@ import (
 func TestJobLoop_RunSchedule_HourlyJob(t *testing.T) {
 	schedule := NewSchedule()
 
-	callTimes := make([]int, 0)
-	schedule.AddHourlyJob("foobar", 17, func(_ string, time int) {
+	callTimes := make([]Time, 0)
+	schedule.AddHourlyJob("foobar", 17, func(_ string, time Time) {
 		callTimes = append(callTimes, time)
 	})
 
-	for time := 0; time < 180; time++ {
+	for time := Time(0); time < 180; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes, []int{
+	assert.Equal(t, callTimes, []Time{
 		17,
 		17 + 60,
 		17 + 60*2,
@@ -27,53 +27,53 @@ func TestJobLoop_RunSchedule_HourlyJob(t *testing.T) {
 func TestJobLoop_RunSchedule_FewHourlyJobs(t *testing.T) {
 	schedule := NewSchedule()
 
-	callTimes1 := make([]int, 0)
-	schedule.AddHourlyJob("one", 17, func(name string, time int) {
+	callTimes1 := make([]Time, 0)
+	schedule.AddHourlyJob("one", 17, func(name string, time Time) {
 		assert.Equal(t, name, "one")
 		callTimes1 = append(callTimes1, time)
 	})
 
-	callTimes2 := make([]int, 0)
-	schedule.AddHourlyJob("two", 59, func(name string, time int) {
+	callTimes2 := make([]Time, 0)
+	schedule.AddHourlyJob("two", 59, func(name string, time Time) {
 		assert.Equal(t, name, "two")
 		callTimes2 = append(callTimes2, time)
 	})
 
-	callTimes3 := make([]int, 0)
-	schedule.AddHourlyJob("three", 17, func(name string, time int) {
+	callTimes3 := make([]Time, 0)
+	schedule.AddHourlyJob("three", 17, func(name string, time Time) {
 		assert.Equal(t, name, "three")
 		callTimes3 = append(callTimes3, time)
 	})
 
-	callTimes4 := make([]int, 0)
-	schedule.AddHourlyJob("four", 0, func(name string, time int) {
+	callTimes4 := make([]Time, 0)
+	schedule.AddHourlyJob("four", 0, func(name string, time Time) {
 		assert.Equal(t, name, "four")
 		callTimes4 = append(callTimes4, time)
 	})
 
-	for time := 0; time < 180; time++ {
+	for time := Time(0); time < 180; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes1, []int{
+	assert.Equal(t, callTimes1, []Time{
 		17,
 		17 + 60,
 		17 + 60*2,
 	})
 
-	assert.Equal(t, callTimes2, []int{
+	assert.Equal(t, callTimes2, []Time{
 		59,
 		59 + 60,
 		59 + 60*2,
 	})
 
-	assert.Equal(t, callTimes3, []int{
+	assert.Equal(t, callTimes3, []Time{
 		17,
 		17 + 60,
 		17 + 60*2,
 	})
 
-	assert.Equal(t, callTimes4, []int{
+	assert.Equal(t, callTimes4, []Time{
 		0,
 		60,
 		60 * 2,
@@ -85,26 +85,26 @@ func TestJobLoop_RunSchedule_IntervalJob(t *testing.T) {
 
 	interval := 17
 
-	callTimes := make([]int, 0)
-	schedule.AddIntervalJob("foobar", interval, 0, func(_ string, time int) {
+	callTimes := make([]Time, 0)
+	schedule.AddIntervalJob("foobar", interval, 0, func(_ string, time Time) {
 		callTimes = append(callTimes, time)
 	})
 
-	for time := 0; time < 180; time++ {
+	for time := Time(0); time < 180; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes, []int{
-		interval,
-		interval * 2,
-		interval * 3,
-		interval * 4,
-		interval * 5,
-		interval * 6,
-		interval * 7,
-		interval * 8,
-		interval * 9,
-		interval * 10,
+	assert.Equal(t, callTimes, []Time{
+		Time(interval),
+		Time(interval * 2),
+		Time(interval * 3),
+		Time(interval * 4),
+		Time(interval * 5),
+		Time(interval * 6),
+		Time(interval * 7),
+		Time(interval * 8),
+		Time(interval * 9),
+		Time(interval * 10),
 	})
 }
 
@@ -114,25 +114,25 @@ func TestJobLoop_RunSchedule_IntervalJobWithOffset(t *testing.T) {
 	interval := 17
 	offset := 10
 
-	callTimes := make([]int, 0)
-	schedule.AddIntervalJob("foobar", interval, offset, func(_ string, time int) {
+	callTimes := make([]Time, 0)
+	schedule.AddIntervalJob("foobar", interval, offset, func(_ string, time Time) {
 		callTimes = append(callTimes, time)
 	})
 
-	for time := 0; time < 180; time++ {
+	for time := Time(0); time < 180; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes, []int{
-		interval + offset,
-		(interval * 2) + offset,
-		(interval * 3) + offset,
-		(interval * 4) + offset,
-		(interval * 5) + offset,
-		(interval * 6) + offset,
-		(interval * 7) + offset,
-		(interval * 8) + offset,
-		(interval * 9) + offset,
+	assert.Equal(t, callTimes, []Time{
+		Time(interval + offset),
+		Time((interval * 2) + offset),
+		Time((interval * 3) + offset),
+		Time((interval * 4) + offset),
+		Time((interval * 5) + offset),
+		Time((interval * 6) + offset),
+		Time((interval * 7) + offset),
+		Time((interval * 8) + offset),
+		Time((interval * 9) + offset),
 	})
 }
 
@@ -142,60 +142,60 @@ func TestJobLoop_RunSchedule_IntervalJobGreaterThan1Hour(t *testing.T) {
 	interval := 100
 	offset := 15
 
-	callTimes := make([]int, 0)
-	schedule.AddIntervalJob("foobar", interval, offset, func(_ string, time int) {
+	callTimes := make([]Time, 0)
+	schedule.AddIntervalJob("foobar", interval, offset, func(_ string, time Time) {
 		callTimes = append(callTimes, time)
 	})
 
-	for time := 0; time < 360; time++ {
+	for time := Time(0); time < 360; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes, []int{
-		interval + offset,
-		(interval * 2) + offset,
-		(interval * 3) + offset,
+	assert.Equal(t, callTimes, []Time{
+		Time(interval + offset),
+		Time((interval * 2) + offset),
+		Time((interval * 3) + offset),
 	})
 }
 
 func TestJobLoop_RunSchedule_FewIntervalJobs(t *testing.T) {
 	schedule := NewSchedule()
 
-	callTimes1 := make([]int, 0)
-	schedule.AddIntervalJob("one", 17, 0, func(name string, time int) {
+	callTimes1 := make([]Time, 0)
+	schedule.AddIntervalJob("one", 17, 0, func(name string, time Time) {
 		assert.Equal(t, name, "one")
 		callTimes1 = append(callTimes1, time)
 	})
 
-	callTimes2 := make([]int, 0)
-	schedule.AddIntervalJob("two", 15, 2, func(name string, time int) {
+	callTimes2 := make([]Time, 0)
+	schedule.AddIntervalJob("two", 15, 2, func(name string, time Time) {
 		assert.Equal(t, name, "two")
 		callTimes2 = append(callTimes2, time)
 	})
 
-	callTimes3 := make([]int, 0)
-	schedule.AddIntervalJob("three", 45, 6, func(name string, time int) {
+	callTimes3 := make([]Time, 0)
+	schedule.AddIntervalJob("three", 45, 6, func(name string, time Time) {
 		assert.Equal(t, name, "three")
 		callTimes3 = append(callTimes3, time)
 	})
 
-	callTimes4 := make([]int, 0)
-	schedule.AddIntervalJob("four", 65, 3, func(name string, time int) {
+	callTimes4 := make([]Time, 0)
+	schedule.AddIntervalJob("four", 65, 3, func(name string, time Time) {
 		assert.Equal(t, name, "four")
 		callTimes4 = append(callTimes4, time)
 	})
 
-	callTimes5 := make([]int, 0)
-	schedule.AddIntervalJob("five", 17, 0, func(name string, time int) {
+	callTimes5 := make([]Time, 0)
+	schedule.AddIntervalJob("five", 17, 0, func(name string, time Time) {
 		assert.Equal(t, name, "five")
 		callTimes5 = append(callTimes5, time)
 	})
 
-	for time := 0; time < 180; time++ {
+	for time := Time(0); time < 180; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes1, []int{
+	assert.Equal(t, callTimes1, []Time{
 		17,
 		17 * 2,
 		17 * 3,
@@ -208,7 +208,7 @@ func TestJobLoop_RunSchedule_FewIntervalJobs(t *testing.T) {
 		17 * 10,
 	})
 
-	assert.Equal(t, callTimes2, []int{
+	assert.Equal(t, callTimes2, []Time{
 		15 + 2,
 		15*2 + 2,
 		15*3 + 2,
@@ -222,18 +222,18 @@ func TestJobLoop_RunSchedule_FewIntervalJobs(t *testing.T) {
 		15*11 + 2,
 	})
 
-	assert.Equal(t, callTimes3, []int{
+	assert.Equal(t, callTimes3, []Time{
 		45 + 6,
 		45*2 + 6,
 		45*3 + 6,
 	})
 
-	assert.Equal(t, callTimes4, []int{
+	assert.Equal(t, callTimes4, []Time{
 		65 + 3,
 		65*2 + 3,
 	})
 
-	assert.Equal(t, callTimes5, []int{
+	assert.Equal(t, callTimes5, []Time{
 		17,
 		17 * 2,
 		17 * 3,
@@ -250,53 +250,53 @@ func TestJobLoop_RunSchedule_FewIntervalJobs(t *testing.T) {
 func TestJobLoop_RunSchedule_MixedHourlyAndIntervalJobs(t *testing.T) {
 	schedule := NewSchedule()
 
-	callTimes1 := make([]int, 0)
-	schedule.AddIntervalJob("one", 17, 0, func(name string, time int) {
+	callTimes1 := make([]Time, 0)
+	schedule.AddIntervalJob("one", 17, 0, func(name string, time Time) {
 		assert.Equal(t, name, "one")
 		callTimes1 = append(callTimes1, time)
 	})
 
-	callTimes2 := make([]int, 0)
-	schedule.AddIntervalJob("two", 15, 2, func(name string, time int) {
+	callTimes2 := make([]Time, 0)
+	schedule.AddIntervalJob("two", 15, 2, func(name string, time Time) {
 		assert.Equal(t, name, "two")
 		callTimes2 = append(callTimes2, time)
 	})
 
-	callTimes3 := make([]int, 0)
-	schedule.AddHourlyJob("three", 17, func(name string, time int) {
+	callTimes3 := make([]Time, 0)
+	schedule.AddHourlyJob("three", 17, func(name string, time Time) {
 		assert.Equal(t, name, "three")
 		callTimes3 = append(callTimes3, time)
 	})
 
-	callTimes4 := make([]int, 0)
-	schedule.AddIntervalJob("four", 65, 3, func(name string, time int) {
+	callTimes4 := make([]Time, 0)
+	schedule.AddIntervalJob("four", 65, 3, func(name string, time Time) {
 		assert.Equal(t, name, "four")
 		callTimes4 = append(callTimes4, time)
 	})
 
-	callTimes5 := make([]int, 0)
-	schedule.AddHourlyJob("five", 25, func(name string, time int) {
+	callTimes5 := make([]Time, 0)
+	schedule.AddHourlyJob("five", 25, func(name string, time Time) {
 		assert.Equal(t, name, "five")
 		callTimes5 = append(callTimes5, time)
 	})
 
-	callTimes6 := make([]int, 0)
-	schedule.AddIntervalJob("six", 45, 6, func(name string, time int) {
+	callTimes6 := make([]Time, 0)
+	schedule.AddIntervalJob("six", 45, 6, func(name string, time Time) {
 		assert.Equal(t, name, "six")
 		callTimes6 = append(callTimes6, time)
 	})
 
-	callTimes7 := make([]int, 0)
-	schedule.AddIntervalJob("seven", 17, 0, func(name string, time int) {
+	callTimes7 := make([]Time, 0)
+	schedule.AddIntervalJob("seven", 17, 0, func(name string, time Time) {
 		assert.Equal(t, name, "seven")
 		callTimes7 = append(callTimes7, time)
 	})
 
-	for time := 0; time < 180; time++ {
+	for time := Time(0); time < 180; time++ {
 		RunSchedule(schedule, time)
 	}
 
-	assert.Equal(t, callTimes1, []int{
+	assert.Equal(t, callTimes1, []Time{
 		17,
 		17 * 2,
 		17 * 3,
@@ -309,7 +309,7 @@ func TestJobLoop_RunSchedule_MixedHourlyAndIntervalJobs(t *testing.T) {
 		17 * 10,
 	})
 
-	assert.Equal(t, callTimes2, []int{
+	assert.Equal(t, callTimes2, []Time{
 		15 + 2,
 		15*2 + 2,
 		15*3 + 2,
@@ -323,30 +323,30 @@ func TestJobLoop_RunSchedule_MixedHourlyAndIntervalJobs(t *testing.T) {
 		15*11 + 2,
 	})
 
-	assert.Equal(t, callTimes3, []int{
+	assert.Equal(t, callTimes3, []Time{
 		17,
 		17 + 60,
 		17 + 60*2,
 	})
 
-	assert.Equal(t, callTimes4, []int{
+	assert.Equal(t, callTimes4, []Time{
 		65 + 3,
 		65*2 + 3,
 	})
 
-	assert.Equal(t, callTimes5, []int{
+	assert.Equal(t, callTimes5, []Time{
 		25,
 		25 + 60,
 		25 + 60*2,
 	})
 
-	assert.Equal(t, callTimes6, []int{
+	assert.Equal(t, callTimes6, []Time{
 		45 + 6,
 		45*2 + 6,
 		45*3 + 6,
 	})
 
-	assert.Equal(t, callTimes7, []int{
+	assert.Equal(t, callTimes7, []Time{
 		17,
 		17 * 2,
 		17 * 3,

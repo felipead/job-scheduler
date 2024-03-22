@@ -9,7 +9,7 @@ func TestSchedule_AddHourlyJob(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time int) {
+	var callback = func(name string, time Time) {
 		callbackCalled = true
 	}
 
@@ -33,7 +33,7 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time int) {
+	var callback = func(name string, time Time) {
 		callbackCalled = true
 	}
 
@@ -59,7 +59,7 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time int) {
+	var callback = func(name string, time Time) {
 		callbackCalled = true
 	}
 

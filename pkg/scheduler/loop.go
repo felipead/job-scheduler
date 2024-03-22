@@ -1,6 +1,6 @@
 package scheduler
 
-const _24Hours = 1440
+const _24Hours = Time(1440)
 
 func JobLoop(schedule *Schedule) {
 	//
@@ -58,7 +58,8 @@ func JobLoop(schedule *Schedule) {
 	// like hour, day or even second.
 	//
 
-	time := 0
+	var time Time = 0
+
 	for time < _24Hours {
 		RunSchedule(schedule, time)
 
@@ -71,9 +72,9 @@ func JobLoop(schedule *Schedule) {
 	}
 }
 
-func RunSchedule(schedule *Schedule, time int) {
-	hour := time / 60
-	minute := time % 60
+func RunSchedule(schedule *Schedule, time Time) {
+	hour := time.GetHour()
+	minute := time.GetMinute()
 
 	jobs := schedule.GetJobsAt(minute)
 
@@ -104,9 +105,9 @@ func RunSchedule(schedule *Schedule, time int) {
 
 	// reschedule the jobs that have been triggered for the next interval
 	for _, job := range triggeredJobs {
-		nextTime := time + job.IntervalMinutes
-		job.NextHour = nextTime / 60
-		job.NextMinute = nextTime % 60
+		nextTime := time.AddMinutes(job.IntervalMinutes)
+		job.NextHour = int(nextTime / 60)
+		job.NextMinute = int(nextTime % 60)
 		schedule.Reschedule(job)
 	}
 }
