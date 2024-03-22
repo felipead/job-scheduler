@@ -94,7 +94,7 @@ func RunSchedule(schedule *Schedule, time int) {
 		// are longer than 60 minutes. For example, repeats every 100 minutes, which will span
 		// across 2 hours.
 		if job.NextHour == hour {
-			job.Trigger(time, hour, minute)
+			job.Trigger(time)
 			triggeredJobs = append(triggeredJobs, job)
 			jobs.Remove(pointer)
 		}

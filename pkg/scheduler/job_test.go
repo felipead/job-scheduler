@@ -9,15 +9,11 @@ import (
 func TestJob_Trigger_ShouldCallCallback(t *testing.T) {
 	name := "foobar"
 	time := 1000
-	hour := time / 60
-	minute := time % 60
 
 	callbackCalled := false
-	onTrigger := func(_name string, _time int, _hour int, _minute int) {
+	onTrigger := func(_name string, _time int) {
 		assert.Equal(t, name, _name)
 		assert.Equal(t, time, _time)
-		assert.Equal(t, hour, _hour)
-		assert.Equal(t, minute, _minute)
 		callbackCalled = true
 	}
 
@@ -27,7 +23,7 @@ func TestJob_Trigger_ShouldCallCallback(t *testing.T) {
 		IntervalMinutes: 50,
 	}
 
-	job.Trigger(time, hour, minute)
+	job.Trigger(time)
 
 	assert.True(t, callbackCalled)
 }
@@ -40,12 +36,10 @@ func TestJob_Trigger_WhenCallbackIsNotDefined(t *testing.T) {
 	}
 
 	time := 1000
-	hour := time / 60
-	minute := time % 60
 
 	called := false
 	test := func() {
-		job.Trigger(time, hour, minute)
+		job.Trigger(time)
 		called = true
 	}
 

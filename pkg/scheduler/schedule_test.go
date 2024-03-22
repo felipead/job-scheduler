@@ -9,7 +9,7 @@ func TestSchedule_AddHourlyJob(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time int, hour int, minute int) {
+	var callback = func(name string, time int) {
 		callbackCalled = true
 	}
 
@@ -25,7 +25,7 @@ func TestSchedule_AddHourlyJob(t *testing.T) {
 	assert.Equal(t, job.NextHour, 0)
 	assert.Equal(t, job.NextMinute, 17)
 
-	job.Trigger(1000, 1000/60, 1000%60)
+	job.Trigger(1000)
 	assert.True(t, callbackCalled)
 }
 
@@ -33,7 +33,7 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time int, hour int, minute int) {
+	var callback = func(name string, time int) {
 		callbackCalled = true
 	}
 
@@ -51,7 +51,7 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 	assert.Equal(t, job.NextHour, 0)
 	assert.Equal(t, job.NextMinute, minute)
 
-	job.Trigger(1000, 1000/60, 1000%60)
+	job.Trigger(1000)
 	assert.True(t, callbackCalled)
 }
 
@@ -59,7 +59,7 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time int, hour int, minute int) {
+	var callback = func(name string, time int) {
 		callbackCalled = true
 	}
 
@@ -78,7 +78,7 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	assert.Equal(t, job.NextHour, hour)
 	assert.Equal(t, job.NextMinute, minute)
 
-	job.Trigger(1000, 1000/60, 1000%60)
+	job.Trigger(1000)
 	assert.True(t, callbackCalled)
 }
 
