@@ -60,10 +60,7 @@ func JobLoop(schedule *Schedule) {
 
 	time := 0
 	for time < _24Hours {
-		hour := time / 60
-		minute := time % 60
-
-		runSchedule(schedule, time, hour, minute)
+		RunSchedule(schedule, time)
 
 		time++
 
@@ -74,7 +71,10 @@ func JobLoop(schedule *Schedule) {
 	}
 }
 
-func runSchedule(schedule *Schedule, time int, hour int, minute int) {
+func RunSchedule(schedule *Schedule, time int) {
+	hour := time / 60
+	minute := time % 60
+
 	jobs := schedule.GetJobsAt(minute)
 
 	if jobs == nil || jobs.Len() == 0 {
@@ -105,8 +105,8 @@ func runSchedule(schedule *Schedule, time int, hour int, minute int) {
 	// reschedule the jobs that have been triggered for the next interval
 	for _, job := range triggeredJobs {
 		nextTime := time + job.IntervalMinutes
-		job.NextMinute = nextTime % 60
 		job.NextHour = nextTime / 60
+		job.NextMinute = nextTime % 60
 		schedule.Reschedule(job)
 	}
 }
