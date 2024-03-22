@@ -81,3 +81,43 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	job.Trigger(1000, 1000/60, 1000%60)
 	assert.True(t, callbackCalled)
 }
+
+func TestSchedule_Reschedule_FreshBucket(t *testing.T) {
+	schedule := NewSchedule()
+
+	job := Job{
+		Name:            "foobar",
+		IntervalMinutes: 17,
+		NextMinute:      50,
+		NextHour:        2,
+	}
+
+	schedule.Reschedule(job)
+
+	jobs := schedule.GetJobsAt(50)
+	assert.Equal(t, jobs.Len(), 1)
+
+	rescheduledJob := jobs.Front().Value.(Job)
+	assert.Equal(t, rescheduledJob, job)
+}
+
+func TestSchedule_Reschedule_DirtyBucket(t *testing.T) {
+	schedule := NewSchedule()
+	schedule.AddIntervalJob("alice", 40, 10, nil)
+	schedule.AddHourlyJob("bob", 50, nil)
+
+	job := Job{
+		Name:            "foobar",
+		IntervalMinutes: 17,
+		NextMinute:      50,
+		NextHour:        2,
+	}
+
+	schedule.Reschedule(job)
+
+	jobs := schedule.GetJobsAt(50)
+	assert.Equal(t, jobs.Len(), 3)
+
+	rescheduledJob := jobs.Front().Next().Next().Value.(Job)
+	assert.Equal(t, rescheduledJob, job)
+}
