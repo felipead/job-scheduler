@@ -22,10 +22,7 @@ func (job *Job) Trigger(time Time) {
 	}
 }
 
-func (job *Job) logTrigger(time Time) {
-	hour := time.GetHour()
-	minute := time.GetMinute()
-
+func (job *Job) String() string {
 	intervalText := "hour"
 	if interval := job.IntervalMinutes; interval != 60 {
 		word := "minutes"
@@ -35,5 +32,9 @@ func (job *Job) logTrigger(time Time) {
 		intervalText = fmt.Sprintf("%d %s", interval, word)
 	}
 
-	fmt.Printf("[%02d:%02d] %v triggered → {every %s}\n", hour, minute, job.Name, intervalText)
+	return fmt.Sprintf("%s {every %s}", job.Name, intervalText)
+}
+
+func (job *Job) logTrigger(time Time) {
+	fmt.Printf("[%s] triggered → %s\n", time.String(), job.String())
 }

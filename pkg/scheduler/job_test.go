@@ -46,3 +46,21 @@ func TestJob_Trigger_WhenCallbackIsNotDefined(t *testing.T) {
 	assert.NotPanics(t, test)
 	assert.True(t, called)
 }
+
+func TestJob_String_Hourly(t *testing.T) {
+	job := Job{
+		Name:            "foo-bar",
+		IntervalMinutes: 60,
+	}
+
+	assert.Equal(t, job.String(), "foo-bar {every hour}")
+}
+
+func TestJob_String_Interval(t *testing.T) {
+	job := Job{
+		Name:            "foo-bar",
+		IntervalMinutes: 17,
+	}
+
+	assert.Equal(t, job.String(), "foo-bar {every 17 minutes}")
+}
