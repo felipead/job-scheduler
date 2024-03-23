@@ -2,12 +2,11 @@ package scheduler
 
 import "fmt"
 
-// TriggerCallback receives the job name, the absolute time (minutes), the hour and the minute of the hour - all
-// relative to the time the job was triggered.
+// TriggerCallback receives the job ID, and the time when the job was triggered.
 type TriggerCallback = func(string, Time)
 
 type Job struct {
-	Name            string
+	ID              string
 	OnTrigger       TriggerCallback
 	IntervalMinutes int
 	NextTime        Time
@@ -17,7 +16,7 @@ func (job *Job) Trigger(time Time) {
 	job.logTrigger(time)
 
 	if job.OnTrigger != nil {
-		job.OnTrigger(job.Name, time)
+		job.OnTrigger(job.ID, time)
 	}
 }
 
@@ -31,7 +30,7 @@ func (job *Job) String() string {
 		intervalText = fmt.Sprintf("%d %s", interval, word)
 	}
 
-	return fmt.Sprintf("%s {every %s}", job.Name, intervalText)
+	return fmt.Sprintf("%s {every %s}", job.ID, intervalText)
 }
 
 func (job *Job) logTrigger(time Time) {

@@ -10,7 +10,7 @@ func TestSchedule_AddHourlyJob(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time Time) {
+	var callback = func(id string, time Time) {
 		callbackCalled = true
 	}
 
@@ -21,7 +21,7 @@ func TestSchedule_AddHourlyJob(t *testing.T) {
 	assert.Equal(t, jobs.Len(), 1)
 
 	job := jobs.Front().Value.(Job)
-	assert.Equal(t, job.Name, "foobar")
+	assert.Equal(t, job.ID, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 60)
 	assert.Equal(t, job.NextTime, Time(17))
 
@@ -33,7 +33,7 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time Time) {
+	var callback = func(id string, time Time) {
 		callbackCalled = true
 	}
 
@@ -46,7 +46,7 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 	assert.Equal(t, jobs.Len(), 1)
 
 	job := jobs.Front().Value.(Job)
-	assert.Equal(t, job.Name, "foobar")
+	assert.Equal(t, job.ID, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 25)
 	assert.Equal(t, job.NextTime, time)
 
@@ -58,7 +58,7 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	schedule := NewSchedule()
 
 	callbackCalled := false
-	var callback = func(name string, time Time) {
+	var callback = func(id string, time Time) {
 		callbackCalled = true
 	}
 
@@ -73,7 +73,7 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	assert.Equal(t, jobs.Len(), 1)
 
 	job := jobs.Front().Value.(Job)
-	assert.Equal(t, job.Name, "foobar")
+	assert.Equal(t, job.ID, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 100)
 	assert.Equal(t, job.NextTime.GetHour(), hour)
 	assert.Equal(t, job.NextTime.GetMinute(), minute)
@@ -86,7 +86,7 @@ func TestSchedule_Reschedule_FreshBucket(t *testing.T) {
 	schedule := NewSchedule()
 
 	job := Job{
-		Name:            "foobar",
+		ID:              "foobar",
 		IntervalMinutes: 17,
 		NextTime:        170,
 	}
@@ -106,7 +106,7 @@ func TestSchedule_Reschedule_DirtyBucket(t *testing.T) {
 	schedule.AddHourlyJob("bob", 50, nil)
 
 	job := Job{
-		Name:            "foobar",
+		ID:              "foobar",
 		IntervalMinutes: 17,
 		NextTime:        170,
 	}

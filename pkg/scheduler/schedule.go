@@ -12,17 +12,17 @@ func NewSchedule() *Schedule {
 	}
 }
 
-func (s *Schedule) AddHourlyJob(name string, minute int, onTrigger TriggerCallback) {
+func (s *Schedule) AddHourlyJob(id string, minute int, onTrigger TriggerCallback) {
 	nextTime := Time(minute % 60)
-	s.addJob(name, 60, nextTime, onTrigger)
+	s.addJob(id, 60, nextTime, onTrigger)
 }
 
-func (s *Schedule) AddIntervalJob(name string, intervalMinutes int, offset int, onTrigger TriggerCallback) {
+func (s *Schedule) AddIntervalJob(id string, intervalMinutes int, offset int, onTrigger TriggerCallback) {
 	nextTime := Time(offset + intervalMinutes)
-	s.addJob(name, intervalMinutes, nextTime, onTrigger)
+	s.addJob(id, intervalMinutes, nextTime, onTrigger)
 }
 
-func (s *Schedule) addJob(name string, intervalMinutes int, nextTime Time, onTrigger TriggerCallback) {
+func (s *Schedule) addJob(id string, intervalMinutes int, nextTime Time, onTrigger TriggerCallback) {
 	nextMinute := nextTime.GetMinute()
 
 	jobs := s.buckets[nextMinute]
@@ -32,7 +32,7 @@ func (s *Schedule) addJob(name string, intervalMinutes int, nextTime Time, onTri
 	}
 
 	jobs.PushBack(Job{
-		Name:            name,
+		ID:              id,
 		OnTrigger:       onTrigger,
 		IntervalMinutes: intervalMinutes,
 		NextTime:        nextTime,

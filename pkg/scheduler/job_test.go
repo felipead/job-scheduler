@@ -7,18 +7,18 @@ import (
 )
 
 func TestJob_Trigger_ShouldCallCallback(t *testing.T) {
-	name := "foobar"
+	id := "foobar"
 	time := Time(1000)
 
 	callbackCalled := false
-	onTrigger := func(_name string, _time Time) {
-		assert.Equal(t, name, _name)
+	onTrigger := func(_id string, _time Time) {
+		assert.Equal(t, id, _id)
 		assert.Equal(t, time, _time)
 		callbackCalled = true
 	}
 
 	job := Job{
-		Name:            name,
+		ID:              id,
 		OnTrigger:       onTrigger,
 		IntervalMinutes: 50,
 	}
@@ -30,7 +30,7 @@ func TestJob_Trigger_ShouldCallCallback(t *testing.T) {
 
 func TestJob_Trigger_WhenCallbackIsNotDefined(t *testing.T) {
 	job := Job{
-		Name:            "foobar",
+		ID:              "foobar",
 		OnTrigger:       nil,
 		IntervalMinutes: 50,
 	}
@@ -49,7 +49,7 @@ func TestJob_Trigger_WhenCallbackIsNotDefined(t *testing.T) {
 
 func TestJob_String_Hourly(t *testing.T) {
 	job := Job{
-		Name:            "foo-bar",
+		ID:              "foo-bar",
 		IntervalMinutes: 60,
 	}
 
@@ -58,7 +58,7 @@ func TestJob_String_Hourly(t *testing.T) {
 
 func TestJob_String_IntervalPlural(t *testing.T) {
 	job := Job{
-		Name:            "foo-bar",
+		ID:              "foo-bar",
 		IntervalMinutes: 17,
 	}
 
@@ -67,7 +67,7 @@ func TestJob_String_IntervalPlural(t *testing.T) {
 
 func TestJob_String_IntervalSingular(t *testing.T) {
 	job := Job{
-		Name:            "foo-bar",
+		ID:              "foo-bar",
 		IntervalMinutes: 1,
 	}
 

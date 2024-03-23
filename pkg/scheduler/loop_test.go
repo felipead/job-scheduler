@@ -29,26 +29,26 @@ func TestJobLoop_RunSchedule_FewHourlyJobs(t *testing.T) {
 	schedule := NewSchedule()
 
 	callTimes1 := make([]Time, 0)
-	schedule.AddHourlyJob("one", 17, func(name string, time Time) {
-		assert.Equal(t, name, "one")
+	schedule.AddHourlyJob("one", 17, func(id string, time Time) {
+		assert.Equal(t, id, "one")
 		callTimes1 = append(callTimes1, time)
 	})
 
 	callTimes2 := make([]Time, 0)
-	schedule.AddHourlyJob("two", 59, func(name string, time Time) {
-		assert.Equal(t, name, "two")
+	schedule.AddHourlyJob("two", 59, func(id string, time Time) {
+		assert.Equal(t, id, "two")
 		callTimes2 = append(callTimes2, time)
 	})
 
 	callTimes3 := make([]Time, 0)
-	schedule.AddHourlyJob("three", 17, func(name string, time Time) {
-		assert.Equal(t, name, "three")
+	schedule.AddHourlyJob("three", 17, func(id string, time Time) {
+		assert.Equal(t, id, "three")
 		callTimes3 = append(callTimes3, time)
 	})
 
 	callTimes4 := make([]Time, 0)
-	schedule.AddHourlyJob("four", 0, func(name string, time Time) {
-		assert.Equal(t, name, "four")
+	schedule.AddHourlyJob("four", 0, func(id string, time Time) {
+		assert.Equal(t, id, "four")
 		callTimes4 = append(callTimes4, time)
 	})
 
@@ -163,32 +163,32 @@ func TestJobLoop_RunSchedule_FewIntervalJobs(t *testing.T) {
 	schedule := NewSchedule()
 
 	callTimes1 := make([]Time, 0)
-	schedule.AddIntervalJob("one", 17, 0, func(name string, time Time) {
-		assert.Equal(t, name, "one")
+	schedule.AddIntervalJob("one", 17, 0, func(id string, time Time) {
+		assert.Equal(t, id, "one")
 		callTimes1 = append(callTimes1, time)
 	})
 
 	callTimes2 := make([]Time, 0)
-	schedule.AddIntervalJob("two", 15, 2, func(name string, time Time) {
-		assert.Equal(t, name, "two")
+	schedule.AddIntervalJob("two", 15, 2, func(id string, time Time) {
+		assert.Equal(t, id, "two")
 		callTimes2 = append(callTimes2, time)
 	})
 
 	callTimes3 := make([]Time, 0)
-	schedule.AddIntervalJob("three", 45, 6, func(name string, time Time) {
-		assert.Equal(t, name, "three")
+	schedule.AddIntervalJob("three", 45, 6, func(id string, time Time) {
+		assert.Equal(t, id, "three")
 		callTimes3 = append(callTimes3, time)
 	})
 
 	callTimes4 := make([]Time, 0)
-	schedule.AddIntervalJob("four", 65, 3, func(name string, time Time) {
-		assert.Equal(t, name, "four")
+	schedule.AddIntervalJob("four", 65, 3, func(id string, time Time) {
+		assert.Equal(t, id, "four")
 		callTimes4 = append(callTimes4, time)
 	})
 
 	callTimes5 := make([]Time, 0)
-	schedule.AddIntervalJob("five", 17, 0, func(name string, time Time) {
-		assert.Equal(t, name, "five")
+	schedule.AddIntervalJob("five", 17, 0, func(id string, time Time) {
+		assert.Equal(t, id, "five")
 		callTimes5 = append(callTimes5, time)
 	})
 
@@ -252,44 +252,44 @@ func TestJobLoop_RunSchedule_MixedHourlyAndIntervalJobs(t *testing.T) {
 	schedule := NewSchedule()
 
 	callTimes1 := make([]Time, 0)
-	schedule.AddIntervalJob("one", 17, 0, func(name string, time Time) {
-		assert.Equal(t, name, "one")
+	schedule.AddIntervalJob("one", 17, 0, func(id string, time Time) {
+		assert.Equal(t, id, "one")
 		callTimes1 = append(callTimes1, time)
 	})
 
 	callTimes2 := make([]Time, 0)
-	schedule.AddIntervalJob("two", 15, 2, func(name string, time Time) {
-		assert.Equal(t, name, "two")
+	schedule.AddIntervalJob("two", 15, 2, func(id string, time Time) {
+		assert.Equal(t, id, "two")
 		callTimes2 = append(callTimes2, time)
 	})
 
 	callTimes3 := make([]Time, 0)
-	schedule.AddHourlyJob("three", 17, func(name string, time Time) {
-		assert.Equal(t, name, "three")
+	schedule.AddHourlyJob("three", 17, func(id string, time Time) {
+		assert.Equal(t, id, "three")
 		callTimes3 = append(callTimes3, time)
 	})
 
 	callTimes4 := make([]Time, 0)
-	schedule.AddIntervalJob("four", 65, 3, func(name string, time Time) {
-		assert.Equal(t, name, "four")
+	schedule.AddIntervalJob("four", 65, 3, func(id string, time Time) {
+		assert.Equal(t, id, "four")
 		callTimes4 = append(callTimes4, time)
 	})
 
 	callTimes5 := make([]Time, 0)
-	schedule.AddHourlyJob("five", 25, func(name string, time Time) {
-		assert.Equal(t, name, "five")
+	schedule.AddHourlyJob("five", 25, func(id string, time Time) {
+		assert.Equal(t, id, "five")
 		callTimes5 = append(callTimes5, time)
 	})
 
 	callTimes6 := make([]Time, 0)
-	schedule.AddIntervalJob("six", 45, 6, func(name string, time Time) {
-		assert.Equal(t, name, "six")
+	schedule.AddIntervalJob("six", 45, 6, func(id string, time Time) {
+		assert.Equal(t, id, "six")
 		callTimes6 = append(callTimes6, time)
 	})
 
 	callTimes7 := make([]Time, 0)
-	schedule.AddIntervalJob("seven", 17, 0, func(name string, time Time) {
-		assert.Equal(t, name, "seven")
+	schedule.AddIntervalJob("seven", 17, 0, func(id string, time Time) {
+		assert.Equal(t, id, "seven")
 		callTimes7 = append(callTimes7, time)
 	})
 

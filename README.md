@@ -43,8 +43,8 @@ When scheduling is done, the `JobLoop` is invoked. It will block the main thread
 All jobs accept an optional callback function, which is called when the job is triggered:
 
 ```go
-schedule.AddHourlyJob("Job 1", 17, func(name string, time schedule.Time) {
-	fmt.Printf("job %s was triggered at %s!", name, time.String())
+schedule.AddHourlyJob("Job 1", 17, func(id string, time schedule.Time) {
+	fmt.Printf("job %s was triggered at %s!", id, time.String())
 })
 ```
 
