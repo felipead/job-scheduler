@@ -50,7 +50,7 @@ schedule.AddHourlyJob("Job 1", 17, func(id string, time schedule.Time) {
 
 ## Algorithm Design
 
-If performance was not a concern, we could simply maintain a simple array containing all jobs. For every minute, we would go over the array and trigger those jobs that match that exact minute (and hour):
+For a small number of jobs, we could simply keep them in an array. For every minute, we would go over the array and trigger those jobs that match that exact minute (and hour):
 
 ```
 let jobs: an array containing all scheduled jobs
@@ -100,9 +100,9 @@ for job in J:
 
 The technique used here is called **indexing**, **[bucket sort](https://en.wikipedia.org/wiki/Bucket_sort)**, or **bin sort**, where we index each job by the minute of the  hour it is supposed to be run (0-59). That makes determining if a given job is supposed to be run in a given hour and minute on average:
 
-    O(N ÷ 60)
+    O(n ÷ 60)
 
-where N is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that can be close to `O(1)`.
+where `n` is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that can be close to `O(1)`.
 
 Unlike bucket sort though, we don't care about sorting the jobs inside each bucket. That could change though if we determine that jobs can have **priorities**. In that case, we could use a **[priority queue](https://en.wikipedia.org/wiki/Priority_queue)**.
 
