@@ -18,8 +18,6 @@ Here are some examples:
 
 ## Interface
 
-Although this is a Cron-like scheduler, the interface is anything like Cron. 
-
 In order to schedule jobs, first you must create a `Schedule` instance, then add hourly or interval jobs.
 
 ```go
@@ -40,7 +38,7 @@ func main() {
 }
 ```
 
-When scheduling is done, the `JobLoop` is invoked which blocks the main thread.
+When scheduling is done, the `JobLoop` is invoked. It will block the main thread.
 
 All jobs accept an optional callback function, which is called when the job is triggered:
 
