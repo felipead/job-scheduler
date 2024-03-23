@@ -61,7 +61,7 @@ If performance was not a concern, we could simply maintain a simple list or arra
 The algorithm works as follows:
 
 ```
-let schedule: hash table where the minute of the hour (0-59) maps to a list of jobs J
+let schedule: a hash table where the minute of the hour (0-59) maps to a list of jobs J
 
 for any given time:
     hour ← time div 60
