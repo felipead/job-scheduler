@@ -56,11 +56,20 @@ func TestJob_String_Hourly(t *testing.T) {
 	assert.Equal(t, job.String(), "foo-bar {every hour}")
 }
 
-func TestJob_String_Interval(t *testing.T) {
+func TestJob_String_IntervalPlural(t *testing.T) {
 	job := Job{
 		Name:            "foo-bar",
 		IntervalMinutes: 17,
 	}
 
 	assert.Equal(t, job.String(), "foo-bar {every 17 minutes}")
+}
+
+func TestJob_String_IntervalSingular(t *testing.T) {
+	job := Job{
+		Name:            "foo-bar",
+		IntervalMinutes: 1,
+	}
+
+	assert.Equal(t, job.String(), "foo-bar {every 1 minute}")
 }
