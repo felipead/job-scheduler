@@ -13,25 +13,18 @@ func NewSchedule() *Schedule {
 }
 
 func (s *Schedule) AddHourlyJob(name string, minute int, onTrigger TriggerCallback) {
-	// TODO: in a production system, I would instead add validation before accepting this job: 0 <= minute < 60
-	minute = minute % 60
-
-	nextTime := Time(minute)
-	nextHour := nextTime.GetHour()
-	nextMinute := nextTime.GetMinute()
-
-	s.addJob(name, 60, nextHour, nextMinute, onTrigger)
+	nextTime := Time(minute % 60)
+	s.addJob(name, 60, nextTime, onTrigger)
 }
 
 func (s *Schedule) AddIntervalJob(name string, intervalMinutes int, offset int, onTrigger TriggerCallback) {
 	nextTime := Time(offset + intervalMinutes)
-	nextHour := nextTime.GetHour()
-	nextMinute := nextTime.GetMinute()
-
-	s.addJob(name, intervalMinutes, nextHour, nextMinute, onTrigger)
+	s.addJob(name, intervalMinutes, nextTime, onTrigger)
 }
 
-func (s *Schedule) addJob(name string, intervalMinutes int, nextHour int, nextMinute int, onTrigger TriggerCallback) {
+func (s *Schedule) addJob(name string, intervalMinutes int, nextTime Time, onTrigger TriggerCallback) {
+	nextMinute := nextTime.GetMinute()
+
 	jobs := s.buckets[nextMinute]
 	if jobs == nil {
 		jobs = list.New()
@@ -42,16 +35,17 @@ func (s *Schedule) addJob(name string, intervalMinutes int, nextHour int, nextMi
 		Name:            name,
 		OnTrigger:       onTrigger,
 		IntervalMinutes: intervalMinutes,
-		NextHour:        nextHour,
-		NextMinute:      nextMinute,
+		NextTime:        nextTime,
 	})
 }
 
 func (s *Schedule) Reschedule(job Job) {
-	jobs := s.buckets[job.NextMinute]
+	nextMinute := job.NextTime.GetMinute()
+
+	jobs := s.buckets[nextMinute]
 	if jobs == nil {
 		jobs = list.New()
-		s.buckets[job.NextMinute] = jobs
+		s.buckets[nextMinute] = jobs
 	}
 	jobs.PushBack(job)
 }

@@ -22,8 +22,7 @@ func TestSchedule_AddHourlyJob(t *testing.T) {
 	job := jobs.Front().Value.(Job)
 	assert.Equal(t, job.Name, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 60)
-	assert.Equal(t, job.NextHour, 0)
-	assert.Equal(t, job.NextMinute, 17)
+	assert.Equal(t, job.NextTime, Time(17))
 
 	job.Trigger(1000)
 	assert.True(t, callbackCalled)
@@ -48,8 +47,7 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 	job := jobs.Front().Value.(Job)
 	assert.Equal(t, job.Name, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 25)
-	assert.Equal(t, job.NextHour, 0)
-	assert.Equal(t, job.NextMinute, minute)
+	assert.Equal(t, job.NextTime, Time(minute))
 
 	job.Trigger(1000)
 	assert.True(t, callbackCalled)
@@ -75,8 +73,8 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 	job := jobs.Front().Value.(Job)
 	assert.Equal(t, job.Name, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 100)
-	assert.Equal(t, job.NextHour, hour)
-	assert.Equal(t, job.NextMinute, minute)
+	assert.Equal(t, job.NextTime.GetHour(), hour)
+	assert.Equal(t, job.NextTime.GetMinute(), minute)
 
 	job.Trigger(1000)
 	assert.True(t, callbackCalled)
@@ -88,8 +86,7 @@ func TestSchedule_Reschedule_FreshBucket(t *testing.T) {
 	job := Job{
 		Name:            "foobar",
 		IntervalMinutes: 17,
-		NextMinute:      50,
-		NextHour:        2,
+		NextTime:        170,
 	}
 
 	schedule.Reschedule(job)
@@ -109,8 +106,7 @@ func TestSchedule_Reschedule_DirtyBucket(t *testing.T) {
 	job := Job{
 		Name:            "foobar",
 		IntervalMinutes: 17,
-		NextMinute:      50,
-		NextHour:        2,
+		NextTime:        170,
 	}
 
 	schedule.Reschedule(job)

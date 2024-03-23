@@ -10,8 +10,7 @@ type Job struct {
 	Name            string
 	OnTrigger       TriggerCallback
 	IntervalMinutes int
-	NextMinute      int
-	NextHour        int
+	NextTime        Time
 }
 
 func (job *Job) Trigger(time Time) {

@@ -73,7 +73,6 @@ func JobLoop(schedule *Schedule) {
 }
 
 func RunSchedule(schedule *Schedule, time Time) {
-	hour := time.GetHour()
 	minute := time.GetMinute()
 
 	jobs := schedule.GetJobsAt(minute)
@@ -94,7 +93,7 @@ func RunSchedule(schedule *Schedule, time Time) {
 		// if the hour also matches. This is important because we might have intervals that
 		// are longer than 60 minutes. For example, repeats every 100 minutes, which will span
 		// across 2 hours.
-		if job.NextHour == hour {
+		if job.NextTime == time {
 			job.Trigger(time)
 			triggeredJobs = append(triggeredJobs, job)
 			jobs.Remove(pointer)
@@ -106,8 +105,7 @@ func RunSchedule(schedule *Schedule, time Time) {
 	// reschedule the jobs that have been triggered for the next interval
 	for _, job := range triggeredJobs {
 		nextTime := time.AddMinutes(job.IntervalMinutes)
-		job.NextHour = nextTime.GetHour()
-		job.NextMinute = nextTime.GetMinute()
+		job.NextTime = nextTime
 		schedule.Reschedule(job)
 	}
 }
