@@ -91,7 +91,7 @@ for job in J:
         reschedule job for nextMinute and nextHour
 ```
 
-The technique used here is called "indexing" or "bucket sort", where we index each job by the minute of the  hour it is supposed to be run (0-59). That makes determining if a given job is supposed to be run in a given hour and minute on average:
+The technique used here is called **[bucket sort](https://en.wikipedia.org/wiki/Bucket_sort)**, **bin sort** or **indexing**, where we index each job by the minute of the  hour it is supposed to be run (0-59). That makes determining if a given job is supposed to be run in a given hour and minute on average:
 
     O(N ÷ 60)
 
