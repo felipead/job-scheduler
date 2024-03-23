@@ -2,6 +2,10 @@ package scheduler
 
 const _24Hours = Time(1440)
 
+//
+// Please refer to README.md for a description of the Algorithm Design and a planned Roadmap.
+//
+
 func JobLoop(schedule *Schedule) {
 	var time Time = 0
 
