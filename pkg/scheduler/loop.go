@@ -73,9 +73,7 @@ func JobLoop(schedule *Schedule) {
 }
 
 func RunSchedule(schedule *Schedule, time Time) {
-	minute := time.GetMinute()
-
-	jobs := schedule.GetJobsAt(minute)
+	jobs := schedule.GetJobsAt(time)
 
 	if jobs == nil || jobs.Len() == 0 {
 		return

@@ -1,8 +1,9 @@
 package scheduler
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestJobLoop_RunSchedule_HourlyJob(t *testing.T) {

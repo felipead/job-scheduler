@@ -50,6 +50,7 @@ func (s *Schedule) Reschedule(job Job) {
 	jobs.PushBack(job)
 }
 
-func (s *Schedule) GetJobsAt(minute int) *list.List {
+func (s *Schedule) GetJobsAt(time Time) *list.List {
+	minute := time.GetMinute()
 	return s.buckets[minute]
 }

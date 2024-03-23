@@ -1,8 +1,9 @@
 package scheduler
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSchedule_AddHourlyJob(t *testing.T) {
@@ -38,16 +39,16 @@ func TestSchedule_AddIntervalJob(t *testing.T) {
 
 	schedule.AddIntervalJob("foobar", 25, 10, callback)
 
-	minute := 25 + 10
+	time := Time(25 + 10)
 
-	jobs := schedule.GetJobsAt(minute)
+	jobs := schedule.GetJobsAt(time)
 	assert.NotNil(t, jobs)
 	assert.Equal(t, jobs.Len(), 1)
 
 	job := jobs.Front().Value.(Job)
 	assert.Equal(t, job.Name, "foobar")
 	assert.Equal(t, job.IntervalMinutes, 25)
-	assert.Equal(t, job.NextTime, Time(minute))
+	assert.Equal(t, job.NextTime, time)
 
 	job.Trigger(1000)
 	assert.True(t, callbackCalled)
@@ -63,10 +64,11 @@ func TestSchedule_AddIntervalJob_IntervalGreaterThan60Minutes(t *testing.T) {
 
 	schedule.AddIntervalJob("foobar", 100, 15, callback)
 
-	hour := (100 + 15) / 60
-	minute := (100 + 15) % 60
+	time := Time(100 + 15)
+	hour := time.GetHour()
+	minute := time.GetMinute()
 
-	jobs := schedule.GetJobsAt(minute)
+	jobs := schedule.GetJobsAt(time)
 	assert.NotNil(t, jobs)
 	assert.Equal(t, jobs.Len(), 1)
 
