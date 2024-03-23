@@ -16,6 +16,46 @@ Here are some examples:
 - Job 4 is executed every 25th minute with a 2-minute offset → 00:27, 00:52, 01:17, 01:42, …
 - Job 5 is executed every 100th minute → 01:40, 03:20, 5:40, …
 
+## Interface
+
+Although this is a Cron-like scheduler, the interface is anything like Cron. 
+
+In order to schedule jobs, first you must create a `Schedule` instance, then add hourly or interval jobs.
+
+```go
+package main
+
+import "scheduler"
+
+func main() {
+    schedule := scheduler.NewSchedule()
+
+    schedule.AddHourlyJob("Job 1", 17, nil)
+    schedule.AddIntervalJob("Job 2", 4, 0, nil)
+    schedule.AddIntervalJob("Job 3", 6, 1, nil)
+    schedule.AddIntervalJob("Job 4", 25, 2, nil)
+    schedule.AddIntervalJob("Job 5", 100, 0, nil)
+
+    scheduler.JobLoop(schedule) // blocks
+}
+```
+
+When scheduling is done, the `JobLoop` is invoked which blocks the main thread.
+
+All jobs accept an optional callback function, which is called when the job is triggered:
+
+```go
+schedule.AddHourlyJob("Job 1", 17, func(name string, time schedule.Time) {
+	fmt.Printf("job %s was triggered at %s!", name, time.String())
+})
+```
+
+## TODO
+
+- [ ] Allow jobs to be scheduled while the loop is running in a separate routine. Currently, this is not possible and the scheduler is not thread-safe.
+- [ ] Currently, intervals are specified in minutes and jobs are also sorted in buckets of minutes (see the algorithm design below). Ideally, this could be configurable. For some applications, it might make sense to run the jobs in intervals of seconds, hours or even days. The bucket time unit should be adjusted accordingly.
+- [ ] Use standard logging interface instead of Println
+
 ## Algorithm Design
 
 If performance was not a concern, we could simply maintain a simple list or array containing all jobs. For every minute, we would go over that list and find those that matches that exact minute (and hour) However, this can be very slow if we have many jobs and are running on the scale of seconds or milliseconds.  Instead, I am going to sort jobs into buckets. The idea is that buckets are sorted by a meaningful time unit.  Since our smallest unit is minutes, I will keep the jobs sorted by 60 buckets, each of them corresponding to a minute of the hour.
