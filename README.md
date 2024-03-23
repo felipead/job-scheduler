@@ -114,3 +114,20 @@ Unlike bucket sort though, we don't care about sorting the jobs inside each buck
 - [ ] Currently, all jobs are treated with the same priority. However, we could determine that some jobs are have higher priority than others, then keep them sorted using a **priority queue**.
 - [ ] Use standard logging interface instead of `fmt.Println`.
 - [ ] Use Go standard `time.Duration` for specifying time intervals.
+
+## Development
+
+Compiling:
+```shell
+make build
+```
+
+Running tests:
+```shell
+make test
+```
+
+Running a quick demo (after compiling):
+```shell
+./run-demo.sh
+```
