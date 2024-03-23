@@ -26,15 +26,15 @@ package main
 import "scheduler"
 
 func main() {
-    schedule := scheduler.NewSchedule()
+	schedule := scheduler.NewSchedule()
 
-    schedule.AddHourlyJob("Job 1", 17, nil)
-    schedule.AddIntervalJob("Job 2", 4, 0, nil)
-    schedule.AddIntervalJob("Job 3", 6, 1, nil)
-    schedule.AddIntervalJob("Job 4", 25, 2, nil)
-    schedule.AddIntervalJob("Job 5", 100, 0, nil)
+	schedule.AddHourlyJob("Job 1", 17, nil)
+	schedule.AddIntervalJob("Job 2", 4, 0, nil)
+	schedule.AddIntervalJob("Job 3", 6, 1, nil)
+	schedule.AddIntervalJob("Job 4", 25, 2, nil)
+	schedule.AddIntervalJob("Job 5", 100, 0, nil)
 
-    scheduler.JobLoop(schedule) // blocks
+	scheduler.JobLoop(schedule) // blocks
 }
 ```
 
@@ -44,7 +44,7 @@ All jobs accept an optional callback function, which is called when the job is t
 
 ```go
 schedule.AddHourlyJob("Job 1", 17, func(id string, time schedule.Time) {
-	fmt.Printf("job %s was triggered at %s!", id, time.String())
+    fmt.Printf("job %s was triggered at %s!", id, time.String())
 })
 ```
 
@@ -96,5 +96,7 @@ The technique used here is called **indexing**, **[bucket sort](https://en.wikip
     O(N ÷ 60)
 
 where N is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that can be close to O(1).
+
+Unlike bucket sort though, we don't care about sorting the jobs inside each bucket.
 
 If indexing by minute is not appropriate for the problem at hand, we could index by any other unit of time, like hour, day or even second.
