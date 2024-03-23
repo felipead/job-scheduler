@@ -102,7 +102,7 @@ The technique used here is called **indexing**, **[bucket sort](https://en.wikip
 
     O(N ÷ 60)
 
-where N is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that can be close to O(1).
+where N is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that can be close to `O(1)`.
 
 Unlike bucket sort though, we don't care about sorting the jobs inside each bucket. That could change though if we determine that jobs can have **priorities**. In that case, we could use a **[priority queue](https://en.wikipedia.org/wiki/Priority_queue)**.
 
