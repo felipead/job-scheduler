@@ -2,7 +2,19 @@
 
 Simplified Cron-like job scheduler algorithm
 
-The idea came as an interview problem, which I then further refined.
+The idea came as an interview problem, which I then further refined. Design a job scheduler where it is possible to schedule jobs that:
+
+1. Run **once per hour** at a given minute.
+2. Run at a given **interval**, expressed in minutes.
+3. Run at a given **interval**, expressed in minutes, with an **offset**.
+
+Here are some examples:
+
+- Job 1 is executed only once per hour at minute 17 → 00:17, 01:17, 02:17, …
+- Job 2 is executed every 4th minute → 00:04, 00:08, 00:12, 00:16 …
+- Job 3 is executed every 6th minute with a 1-minute offset → 00:07, 00:13, 00:19, …
+- Job 4 is executed every 25th minute with a 2-minute offset → 00:27, 00:52, 01:17, 01:42, …
+- Job 5 is executed every 100th minute → 01:40, 03:20, 5:40, …
 
 ## Algorithm Design
 
