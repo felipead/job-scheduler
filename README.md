@@ -50,8 +50,9 @@ schedule.AddHourlyJob("Job 1", 17, func(id string, time schedule.Time) {
 
 ## TODO
 
+- [ ] The `JobLoop` is not blocking, neither waits for the scheduled amount of time. It was coded purely for demonstrating the algorithm. That must change so that we can consider it production ready.
 - [ ] Allow jobs to be scheduled while the loop is running in a separate routine. Currently, this is not possible and the scheduler is not thread-safe.
-- [ ] Currently, intervals are specified in minutes and jobs are also sorted in buckets of minutes (see the algorithm design below). Ideally, this could be configurable. For some applications, it might make sense to run the jobs in intervals of seconds, hours or even days. The bucket time unit should be adjusted accordingly.
+- [ ] Currently, intervals are specified in minutes and jobs are also sorted in buckets of minutes (see the algorithm design below). Ideally, this could be configurable. For some applications, it might make sense to run the jobs in intervals of seconds, hours or even days. The bucket time unit should be adjusted accordingly. 
 - [ ] Currently, all jobs are treated with the same priority. However, we could determine that some jobs are have higher priority than others, then keep them sorted using a **priority queue**.
 - [ ] Use standard logging interface instead of `fmt.Println`.
 
