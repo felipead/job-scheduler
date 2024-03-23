@@ -53,7 +53,7 @@ schedule.AddHourlyJob("Job 1", 17, func(id string, time schedule.Time) {
 If performance was not a concern, we could simply maintain a simple array containing all jobs. For every minute, we would go over the array and trigger those jobs that match that exact minute (and hour):
 
 ```
-let jobs: an array containing a scheduled jobs
+let jobs: an array containing all scheduled jobs
 
 for any given time:
     for job in jobs:
