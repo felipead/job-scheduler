@@ -48,14 +48,6 @@ schedule.AddHourlyJob("Job 1", 17, func(id string, time schedule.Time) {
 })
 ```
 
-## TODO
-
-- [ ] The `JobLoop` is not blocking, neither waits for the scheduled amount of time. It was coded purely for demonstrating the algorithm. That must change so that we can consider it production ready.
-- [ ] Allow jobs to be scheduled while the loop is running in a separate routine. Currently, this is not possible and the scheduler is not thread-safe.
-- [ ] Currently, intervals are specified in minutes and jobs are also sorted in buckets of minutes (see the algorithm design below). Ideally, this could be configurable. For some applications, it might make sense to run the jobs in intervals of seconds, hours or even days. The bucket time unit should be adjusted accordingly.
-- [ ] Currently, all jobs are treated with the same priority. However, we could determine that some jobs are have higher priority than others, then keep them sorted using a **priority queue**.
-- [ ] Use standard logging interface instead of `fmt.Println`.
-
 ## Algorithm Design
 
 If performance was not a concern, we could simply maintain a simple array containing all jobs. For every minute, we would go over the array and trigger those jobs that match that exact minute (and hour):
@@ -69,7 +61,7 @@ for any given time:
             job.Trigger()
 ```
 
-However, this has quadratic time performance (`O(n²)`), and could be slow if we have many jobs or are running in the scale of seconds or milliseconds.
+However, this has `O(n²)` time performance, where `n` is the number jobs. It could be slow if we have many jobs or are running in the scale of seconds or milliseconds.
 
 Instead, we will sort jobs into buckets. The idea is that buckets are sorted by a meaningful time unit. Since our smallest unit is minutes, I will keep the jobs sorted by 60 buckets, each of them corresponding to a minute of the hour. But that could change if indexing by minute is not appropriate for the problem at hand. We could index by any other unit of time, like hour, day or even second.
 
@@ -113,3 +105,11 @@ The technique used here is called **indexing**, **[bucket sort](https://en.wikip
 where N is the total number of jobs (assuming a uniform distribution). For a small and uniform enough set, that can be close to O(1).
 
 Unlike bucket sort though, we don't care about sorting the jobs inside each bucket. That could change though if we determine that jobs can have **priorities**. In that case, we could use a **[priority queue](https://en.wikipedia.org/wiki/Priority_queue)**.
+
+## Future Improvements
+
+- [ ] The `JobLoop` is not blocking, neither waits for the scheduled amount of time. It was coded purely for demonstrating the algorithm. That must change so that we can consider it production ready.
+- [ ] Allow jobs to be scheduled while the loop is running in a separate routine. Currently, this is not possible and the scheduler is not thread-safe.
+- [ ] Currently, intervals are specified in minutes and jobs are also sorted in buckets of minutes (see the algorithm design above). Ideally, this could be configurable. For some applications, it might make sense to run the jobs in intervals of seconds, hours or even days. The bucket time unit should be adjusted accordingly.
+- [ ] Currently, all jobs are treated with the same priority. However, we could determine that some jobs are have higher priority than others, then keep them sorted using a **priority queue**.
+- [ ] Use standard logging interface instead of `fmt.Println`.
