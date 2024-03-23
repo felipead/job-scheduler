@@ -16,17 +16,17 @@ func (s *Schedule) AddHourlyJob(name string, minute int, onTrigger TriggerCallba
 	// TODO: in a production system, I would instead add validation before accepting this job: 0 <= minute < 60
 	minute = minute % 60
 
-	nextTime := minute
-	nextHour := nextTime / 60
-	nextMinute := nextTime % 60
+	nextTime := Time(minute)
+	nextHour := nextTime.GetHour()
+	nextMinute := nextTime.GetMinute()
 
 	s.addJob(name, 60, nextHour, nextMinute, onTrigger)
 }
 
 func (s *Schedule) AddIntervalJob(name string, intervalMinutes int, offset int, onTrigger TriggerCallback) {
-	nextTime := offset + intervalMinutes
-	nextHour := nextTime / 60
-	nextMinute := nextTime % 60
+	nextTime := Time(offset + intervalMinutes)
+	nextHour := nextTime.GetHour()
+	nextMinute := nextTime.GetMinute()
 
 	s.addJob(name, intervalMinutes, nextHour, nextMinute, onTrigger)
 }
