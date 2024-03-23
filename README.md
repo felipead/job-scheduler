@@ -67,7 +67,7 @@ for any given time:
     hour ← time div 60
     minute ← time mod 60
 
-    J ← schedule[minute]
+    J ← schedule[minute]      // J is a linked-list
     for job in J:
         job.Trigger()
         remove job from J
