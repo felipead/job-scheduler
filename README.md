@@ -113,3 +113,4 @@ Unlike bucket sort though, we don't care about sorting the jobs inside each buck
 - [ ] Currently, intervals are specified in minutes and jobs are also sorted in buckets of minutes (see the algorithm design above). Ideally, this could be configurable. For some applications, it might make sense to run the jobs in intervals of seconds, hours or even days. The bucket time unit should be adjusted accordingly.
 - [ ] Currently, all jobs are treated with the same priority. However, we could determine that some jobs are have higher priority than others, then keep them sorted using a **priority queue**.
 - [ ] Use standard logging interface instead of `fmt.Println`.
+- [ ] Use Go standard `time.Duration` for specifying time intervals.
