@@ -47,8 +47,7 @@ func RunSchedule(schedule *Schedule, time Time) {
 
 	// reschedule the jobs that have been triggered for the next interval
 	for _, job := range triggeredJobs {
-		nextTime := time.AddMinutes(job.IntervalMinutes)
-		job.NextTime = nextTime
+		job.NextTime = time.AddMinutes(job.IntervalMinutes)
 		schedule.Reschedule(job)
 	}
 }
