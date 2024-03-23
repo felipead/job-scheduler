@@ -127,7 +127,7 @@ Running tests:
 make test
 ```
 
-Running a quick demo (after compiling):
+Running a quick demo:
 ```shell
 ./run-demo.sh
 ```
