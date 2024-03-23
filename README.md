@@ -63,7 +63,7 @@ for any given time:
 
 However, this has `O(n²)` time performance, where `n` is the number jobs. It could be slow if we have many jobs or are running in the scale of seconds or milliseconds.
 
-Instead, we will sort jobs into buckets. The idea is that buckets are sorted by a meaningful time unit. Since our smallest unit is minutes, I will keep the jobs sorted by 60 buckets, each of them corresponding to a minute of the hour. But that could change if indexing by minute is not appropriate for the problem at hand. We could index by any other unit of time, like hour, day or even second.
+Instead, we will sort jobs into buckets. The idea is that buckets are sorted by a meaningful time unit. Since our smallest unit is minutes, We will keep the jobs sorted by 60 buckets, each of them corresponding to a minute of the hour. But that could change if indexing by minute is not appropriate for the problem at hand. We could index by any other unit of time, like hour, day or even second.
 
 The algorithm works as follows:
 
@@ -106,7 +106,9 @@ where `n` is the total number of jobs (assuming a uniform distribution). For a s
 
 Unlike bucket sort though, we don't care about sorting the jobs inside each bucket. That could change though if we determine that jobs can have **priorities**. In that case, we could use a **[priority queue](https://en.wikipedia.org/wiki/Priority_queue)**.
 
-## Future Improvements
+## Roadmap
+
+This is a very simplistic and limited implementation. However, the following are planned:
 
 - [ ] The `JobLoop` is not blocking, neither waits for the scheduled amount of time. It was coded purely for demonstrating the algorithm. That must change so that we can consider it production ready.
 - [ ] Allow jobs to be scheduled while the loop is running in a separate routine. Currently, this is not possible and the scheduler is not thread-safe.
@@ -114,6 +116,9 @@ Unlike bucket sort though, we don't care about sorting the jobs inside each buck
 - [ ] Currently, all jobs are treated with the same priority. However, we could determine that some jobs are have higher priority than others, then keep them sorted using a **priority queue**.
 - [ ] Use standard logging interface instead of `fmt.Println`.
 - [ ] Use Go standard `time.Duration` for specifying time intervals.
+- [ ] Support one-off or adhoc jobs, which will run just once at a specific time.
+- [ ] Some jobs can be slow, which will impact the overall scheduling. Run the jobs in separate go-routines, and abort them if they exceed the timeout.
+- [ ] Ability to retry failed jobs up to a specified number of times, in the next minute or so.
 
 ## Development
 
