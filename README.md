@@ -61,7 +61,7 @@ for any given time:
             job.Trigger()
 ```
 
-However, this has `O(n²)` time performance, where `n` is the number jobs. It could be slow if we have many jobs or are running in the scale of seconds or milliseconds.
+Although we are searching for jobs in linear time at every cloud tick, it could be prohibitively slow if we have many jobs or are running in the scale of seconds or milliseconds.
 
 Instead, we will sort jobs into buckets. The idea is that buckets are sorted by a meaningful time unit. Since our smallest unit is minutes, We will keep the jobs sorted by 60 buckets, each of them corresponding to a minute of the hour. But that could change if indexing by minute is not appropriate for the problem at hand. We could index by any other unit of time, like hour, day or even second.
 
