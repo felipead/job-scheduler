@@ -22,16 +22,16 @@ func JobLoop(schedule *Schedule) {
 }
 
 func RunSchedule(schedule *Schedule, time Time) {
-	jobs := schedule.GetJobsAt(time)
+	bucket := schedule.GetJobsAt(time)
 
-	if jobs == nil || jobs.Len() == 0 {
+	if bucket == nil || bucket.Len() == 0 {
 		return
 	}
 
-	triggeredJobs := make([]Job, 0, jobs.Len())
+	triggeredJobs := make([]Job, 0, bucket.Len())
 
-	// iterates over the Linked List, triggering jobs and removing them from the list if they were triggered
-	pointer := jobs.Front()
+	// iterates over the bucket (a linked-list), triggering jobs and removing them from the bucket
+	pointer := bucket.Front()
 	for pointer != nil {
 		job := pointer.Value.(Job)
 		nextPointer := pointer.Next()
@@ -43,7 +43,7 @@ func RunSchedule(schedule *Schedule, time Time) {
 		if job.NextTime == time {
 			job.Trigger(time)
 			triggeredJobs = append(triggeredJobs, job)
-			jobs.Remove(pointer)
+			bucket.Remove(pointer)
 		}
 
 		pointer = nextPointer
