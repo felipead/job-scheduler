@@ -117,7 +117,7 @@ This is a very simplistic and limited implementation. However, the following are
 - [ ] Use standard logging interface instead of `fmt.Println`.
 - [ ] Use Go standard `time.Duration` for specifying time intervals.
 - [ ] Support one-off or adhoc jobs, which will run just once at a specific time.
-- [ ] Some jobs can be slow, which will impact the overall scheduling. Run the jobs in separate go-routines, and abort them if they exceed the timeout.
+- [ ] Some jobs can be slow, which will impact the overall scheduling. Run the jobs in separate go-routines, and abort them if they exceed the timeout. Use [`context.WithTimeout`](https://pkg.go.dev/context#WithTimeout).
 - [ ] Ability to retry failed jobs up to a specified number of times, in the next minute or so.
 
 ## Development
